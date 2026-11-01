@@ -48,8 +48,13 @@ endif()
 if(DEFINED SlicerExecutionModel_INSTALL_NO_DEVELOPMENT)
   set(GenerateCLP_INSTALL_NO_DEVELOPMENT ${SlicerExecutionModel_INSTALL_NO_DEVELOPMENT})
   set(ModuleDescriptionParser_INSTALL_NO_DEVELOPMENT ${SlicerExecutionModel_INSTALL_NO_DEVELOPMENT})
-  set(tclap_INSTALL_NO_DEVELOPMENT ${SlicerExecutionModel_INSTALL_NO_DEVELOPMENT})
+  set(TCLAP_INSTALL_NO_DEVELOPMENT ${SlicerExecutionModel_INSTALL_NO_DEVELOPMENT})
 endif()
+
+if(NOT DEFINED SlicerExecutionModel_INSTALL_NO_DEVELOPMENT)
+  set(SlicerExecutionModel_INSTALL_NO_DEVELOPMENT ON)
+endif()
+set(SlicerExecutionModel_INSTALL_CONFIG_DIR lib/SlicerExecutionModel)
 
 if(NOT DEFINED SlicerExecutionModel_EXPORT_FILE)
   set(SlicerExecutionModel_EXPORT_FILE ${CMAKE_CURRENT_BINARY_DIR}/SlicerExecutionModelTargets.cmake)
@@ -247,3 +252,16 @@ foreach(SCRIPT ${allscripts})
   configure_file(${SCRIPT}
     ${CMAKE_CURRENT_BINARY_DIR}/CMake/${_fileName} COPYONLY IMMEDIATE)
 endforeach()
+
+if(NOT SlicerExecutionModel_INSTALL_NO_DEVELOPMENT)
+  install(FILES ${allscripts}
+    DESTINATION ${SlicerExecutionModel_INSTALL_CONFIG_DIR}/CMake
+    COMPONENT Development
+    )
+  install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/UseSlicerExecutionModel.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/install/SlicerExecutionModelConfig.cmake
+    DESTINATION ${SlicerExecutionModel_INSTALL_CONFIG_DIR}
+    COMPONENT Development
+    )
+endif()
